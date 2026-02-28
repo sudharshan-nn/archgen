@@ -66,23 +66,54 @@ archgen /path/to/repo
 archgen https://github.com/psf/requests
 ```
 
+## CLI Options
+
+| Option | Description |
+|--------|-------------|
+| `-o, --output PATH` | Output directory (default: output) |
+| `--name TEXT` | Repository name for diagrams |
+| `--include-tests` | Include test modules |
+| `--max-depth N` | Directory structure depth (default: 4) |
+| `--filter PATH` | Only analyze paths (repeatable) |
+| `--format mermaid/plantuml` | Output format |
+| `--no-html` | Skip HTML report |
+| `--export-png` | Export PNG (requires mermaid-cli) |
+| `--export-svg` | Export SVG (requires mermaid-cli) |
+| `--no-circular-check` | Skip circular dependency detection |
+
+## Configuration
+
+Create `.archgen.yaml` or `.archgen.json` in your repo root. See `.archgen.example.yaml` for all options.
+
 ## Output
 
 The tool generates:
 
-1. **architecture.mmd** - High-level architecture showing modules and their relationships
-2. **flowchart.mmd** - Flow diagrams for key use cases and entry points
+1. **architecture.mmd** - Module structure and dependencies
+2. **system_design.mmd** - System design layered diagram (Client → API → App → Data)
+3. **flowchart.mmd** - Flow diagrams for key use cases and entry points
+4. **directory_structure.mmd** - Directory layout
+5. **c4_diagram.mmd** - C4-style architecture (Context/Container)
+6. **call_graph.mmd** - Function call graph within modules
+7. **circular_dependencies.mmd** - Circular import cycles (if detected)
+8. **api_flows/** - Per-API flow and sequence diagrams (Flask/FastAPI/Django/Express)
+9. **report.html** - Standalone HTML report with all diagrams (open in browser)
 
 View Mermaid files:
 - **GitHub**: Paste content in a `.md` file or use GitHub's Mermaid support
 - **VS Code**: Install "Mermaid" extension
 - **Online**: [mermaid.live](https://mermaid.live)
 
-## Supported Languages
+## Supported Languages & Frameworks
 
-- **Python**: Full AST analysis (imports, classes, functions)
-- **JavaScript/TypeScript**: Basic structure analysis
+- **Python**: Flask, FastAPI, Django (routes + AST analysis)
+- **JavaScript/TypeScript**: Express, Koa (routes + structure)
 - **Other**: Directory structure and file relationships
+
+## Future Improvements
+
+- **Watch mode**: Regenerate on file changes
+- **Optional LLM**: Add descriptions (requires API key)
 
 ## License
 

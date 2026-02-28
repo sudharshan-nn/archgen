@@ -1,3 +1,4 @@
 # ArchGen - Repository Architecture Diagram Generator
 click>=8.0.0
 GitPython>=3.1.0
+# PyYAML>=6.0  # Optional - for .archgen.yaml; use .archgen.json if not installed

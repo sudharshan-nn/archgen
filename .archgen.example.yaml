@@ -1,0 +1,16 @@
+# ArchGen Configuration Example
+# Copy to .archgen.yaml in your repo root
+
+include_tests: false      # Include test modules in diagrams
+max_depth: 4              # Directory structure depth
+filter_paths: []          # Only analyze these paths (e.g. ["src/", "lib/"])
+skip_dirs: []             # Additional dirs to skip
+output_format: mermaid    # mermaid | plantuml
+export_html: true         # Generate HTML report
+export_png: false         # Export PNG (requires mermaid-cli)
+export_svg: false         # Export SVG (requires mermaid-cli)
+max_modules: 30           # Max modules in architecture diagram
+max_edges: 50             # Max dependency edges
+max_api_routes: 20        # Max per-API diagrams
+c4_level: container       # context | container | component
+detect_circular: true     # Detect circular dependencies
