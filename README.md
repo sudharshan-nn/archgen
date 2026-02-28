@@ -2,6 +2,20 @@
 
 Generate architecture diagrams and flow charts from any local repository or GitHub URL. Understand codebase structure at a glance.
 
+## Quick Start
+
+```bash
+# 1. Clone and setup
+git clone <repo-url>
+cd archgen
+python3 -m venv venv && source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# 2. Generate diagrams (local or GitHub)
+python run.py /path/to/local/repo
+python run.py https://github.com/psf/requests
+```
+
 ## Features
 
 - **Local & GitHub support**: Analyze local repos or clone from GitHub URLs
