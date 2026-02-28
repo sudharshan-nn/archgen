@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "archgen"
+version = "0.1.0"
+description = "Generate architecture and flow diagrams from repositories"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "click>=8.0.0",
+    "GitPython>=3.1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+
+[project.scripts]
+archgen = "archgen.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["archgen*"]
