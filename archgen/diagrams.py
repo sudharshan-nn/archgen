@@ -20,7 +20,7 @@ def generate_architecture_diagram(modules: list[ModuleInfo], repo_name: str = "R
     """
     lines = [
         "flowchart TB",
-        f"    subgraph {_sanitize_id(repo_name)}[\"{repo_name}\"]",
+        f"    subgraph {_sanitize_id(repo_name)}[\"📦 {repo_name}\"]",
     ]
     
     # Group modules by top-level package
@@ -39,7 +39,7 @@ def generate_architecture_diagram(modules: list[ModuleInfo], repo_name: str = "R
     for pkg_name, pkg_modules in packages.items():
         if shown >= max_modules:
             break
-        pkg_id = _sanitize_id(pkg_name)
+        pkg_id = _sanitize_id(f"pkg_{pkg_name}")
         lines.append(f"        subgraph {pkg_id}[\"{pkg_name}\"]")
         for m in pkg_modules[:5]:  # Max 5 per package
             if shown >= max_modules:
@@ -88,7 +88,7 @@ def generate_flowchart_diagram(modules: list[ModuleInfo], repo_name: str = "Repo
     """
     lines = [
         "flowchart LR",
-        f"    subgraph EntryPoints[\"Entry Points\"]",
+        f"    subgraph EntryPoints[\"🚀 Entry Points\"]",
     ]
     
     entry_modules = [m for m in modules if m.entry_points or m.functions]
@@ -125,7 +125,7 @@ def generate_flowchart_diagram(modules: list[ModuleInfo], repo_name: str = "Repo
     
     # Add key modules/functions
     lines.append("")
-    lines.append("    subgraph Core[\"Core Modules\"]")
+    lines.append("    subgraph Core[\"⚙️ Core Modules\"]")
     core_count = 0
     for m in modules:
         if core_count >= 10:
@@ -160,20 +160,20 @@ def generate_system_design_diagram(modules: list[ModuleInfo], repo_name: str = "
         by_type[ct].append(m)
 
     layer_order = [
-        (ComponentType.API, "API / Web Layer", "API_Web_Layer"),
-        (ComponentType.APP, "Application Layer", "Application_Layer"),
-        (ComponentType.AUTH, "Authentication", "Authentication"),
-        (ComponentType.DB, "Database Layer", "Database_Layer"),
-        (ComponentType.CACHE, "Cache Layer", "Cache_Layer"),
-        (ComponentType.QUEUE, "Message Queue", "Message_Queue"),
-        (ComponentType.CLIENT, "External Services", "External_Services"),
+        (ComponentType.API, "🔌 API / Web Layer", "API_Web_Layer", "#4A90D9"),
+        (ComponentType.APP, "⚙️ Application Layer", "Application_Layer", "#50C878"),
+        (ComponentType.AUTH, "🔐 Authentication", "Authentication", "#9B59B6"),
+        (ComponentType.DB, "🗄️ Database Layer", "Database_Layer", "#E67E22"),
+        (ComponentType.CACHE, "⚡ Cache Layer", "Cache_Layer", "#F1C40F"),
+        (ComponentType.QUEUE, "📨 Message Queue", "Message_Queue", "#E74C3C"),
+        (ComponentType.CLIENT, "🌐 External Services", "External_Services", "#2ECC71"),
     ]
 
     lines = [
         "flowchart TB",
         "    %% System Design Architecture - Layered View",
-        "    subgraph client[\"Client Layer\"]",
-        "        user((\"👤 User / Client\"))",
+        "    subgraph client[\"👤 Client Layer\"]",
+        "        user((\"User / Client\"))",
         "    end",
         "",
     ]
@@ -181,7 +181,7 @@ def generate_system_design_diagram(modules: list[ModuleInfo], repo_name: str = "
     node_ids: set[str] = set()
     first_in_layer: dict[str, str] = {}
 
-    for comp_type, layer_name, layer_id in layer_order:
+    for comp_type, layer_name, layer_id, color in layer_order:
         mods = by_type.get(comp_type, [])
         if not mods:
             continue
@@ -200,6 +200,7 @@ def generate_system_design_diagram(modules: list[ModuleInfo], repo_name: str = "
         if first_node:
             first_in_layer[layer_id] = first_node
         lines.append("    end")
+        lines.append(f"    style {layer_id} fill:{color}22,stroke:{color},stroke-width:2px")
         lines.append("")
 
     uncategorized = [
@@ -207,7 +208,7 @@ def generate_system_design_diagram(modules: list[ModuleInfo], repo_name: str = "
         if m.component_type == ComponentType.UNKNOWN and "test" not in m.name.lower()
     ]
     if uncategorized and "Application_Layer" not in first_in_layer:
-        lines.append('    subgraph Application_Layer["Application Layer"]')
+        lines.append('    subgraph Application_Layer["⚙️ Application Layer"]')
         for m in uncategorized[:6]:
             nid = _sanitize_id(f"app_{m.name}")
             if nid in node_ids:
@@ -218,8 +219,10 @@ def generate_system_design_diagram(modules: list[ModuleInfo], repo_name: str = "
             display = m.name.split(".")[-1] if "." in m.name else m.name
             lines.append(f"        {nid}[\"{display}\"]")
         lines.append("    end")
+        lines.append("    style Application_Layer fill:#50C87822,stroke:#50C878,stroke-width:2px")
         lines.append("")
 
+    lines.append("    style client fill:#3498db22,stroke:#3498db,stroke-width:2px")
     lines.append("    %% Data Flow: User -> API -> App -> Data")
     if "API_Web_Layer" in first_in_layer:
         lines.append(f"    user --> {first_in_layer['API_Web_Layer']}")
@@ -357,9 +360,9 @@ def generate_c4_diagram(modules: list[ModuleInfo], repo_name: str = "Repository"
     prod = [m for m in modules if m.component_type != ComponentType.TEST]
     lines = [
         "flowchart TB",
-        f"    subgraph Context[\"C4 Context - {repo_name}\"]",
+        f"    subgraph Context[\"🏗️ C4 Context - {repo_name}\"]",
         "        user((\"👤 User\"))",
-        f"        system[\"{repo_name}\"]",
+        f"        system[\"📦 {repo_name}\"]",
         "    end",
         "",
         f"    subgraph Containers[\"Containers\"]",
@@ -430,7 +433,7 @@ def mermaid_to_plantuml(mermaid: str) -> str:
 
 def generate_directory_diagram(structure: dict, repo_name: str = "Repository") -> str:
     """Generate a simple directory structure diagram."""
-    lines = ["flowchart TB", f"    subgraph {_sanitize_id(repo_name)}[\"{repo_name} Structure\"]"]
+    lines = ["flowchart TB", f"    subgraph {_sanitize_id(repo_name)}[\"📁 {repo_name} Structure\"]"]
     
     def add_nodes(d: dict, prefix: str = "") -> None:
         for key, value in d.items():
